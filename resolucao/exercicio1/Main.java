@@ -4,7 +4,7 @@ public class Main {
 
     static Scanner scanner = new Scanner(System.in);
 
-    private static final String INITIAL_MESSAGE = "[1] Verificar Saldo\n[2] Verificar limite Cheque Especial\n[3] Depósito\n[4] Saque\n[5] Pagamento\n[0] Sair";
+    private static final String INITIAL_MESSAGE = "[1] Verificar Saldo\n[2] Verificar limite Cheque Especial\n[3] Depósito\n[4] Saque\n[5] Pagamento\n[6] Consulta juros\n[0] Sair";
     private static int optionMenu = -1; 
 
     private static String nome;
@@ -53,26 +53,34 @@ public class Main {
                 System.out.println("Gostaria de fazer um depósito inicial? [S] ou [N]");
                 var response = scanner.next();
 
-
-                // Criar um While e controlar valor negativo na criação da conta
-                if (response.equalsIgnoreCase("s")){
-                    clearConsole();
-                    System.out.println("Qual valor deseja depositar ? ");
-                    System.out.printf("-> ");
-                    var firstDeposit = scanner.nextDouble();
-                    saldo = firstDeposit;
-                    System.out.printf("O valor de R$ %.2f foi depositado com sucesso!\n", firstDeposit);
-                    Thread.sleep(3000);
-                } else if (response.equalsIgnoreCase("n")) {
-                    clearConsole();
-                    System.out.println("Vamos prosseguir então.");
-                    saldo = 0;
-                } else {
-                    System.out.println("Opção inválida.");
-                    clearConsole();
-                    continue;
+                while (true){
+                    if (response.equalsIgnoreCase("s")){
+                        clearConsole();
+                        System.out.println("Qual valor deseja depositar ? ");
+                        System.out.printf("-> ");
+                        var firstDeposit = scanner.nextDouble();
+                        if (firstDeposit <= 0){
+                            System.out.println("O valor não pode ser menor ou iguaL a zero.");
+                            Thread.sleep(2000);
+                            continue;
+                        }
+                        saldo = firstDeposit;
+                        System.out.printf("O valor de R$ %.2f foi depositado com sucesso!\n", firstDeposit);
+                        Thread.sleep(3000);
+                        break;
+                        
+                    } else if (response.equalsIgnoreCase("n")) {
+                        clearConsole();
+                        System.out.println("Vamos prosseguir então.");
+                        saldo = 0;
+                        break;
+                    } else {
+                        System.out.println("Opção inválida.");
+                        clearConsole();
+                        continue;
+                    }
                 }
-                
+                                
                 contaBancaria = new ContaBancaria(saldo);
             }
             
@@ -103,6 +111,7 @@ public class Main {
                     double valorPagamento = scanner.nextDouble();
                     contaBancaria.efetuarPagamento(valorPagamento);
                 }
+                case 6 -> contaBancaria.consultaPagamentoJuros();
             }
         } while(optionMenu != 0);
     }
